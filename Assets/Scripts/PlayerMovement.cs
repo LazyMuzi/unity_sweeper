@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
         var vertical = joystick.Vertical;
         
         _movement.Set(horizontal, 0f, vertical);
-        _movement.Normalize ();
+        // _movement.Normalize ();
 
         var hasHorizontalInput = !Mathf.Approximately (horizontal, 0f);
         var hasVerticalInput = !Mathf.Approximately (vertical, 0f);
@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
         var desiredForward = Vector3.RotateTowards (transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
         _rotation = Quaternion.LookRotation (desiredForward);
 
-        transform.rotation = _rotation;
-        transform.Translate(_movement * moveSpeed * Time.deltaTime);
+        transform.forward = _movement;
+        transform.position += _movement * moveSpeed * Time.deltaTime;
     }
 }
