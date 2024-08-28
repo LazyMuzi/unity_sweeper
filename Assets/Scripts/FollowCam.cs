@@ -14,7 +14,7 @@ public class FollowCam : MonoBehaviour
         transform.rotation = camAngle;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (target == null)
         {
