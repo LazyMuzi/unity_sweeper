@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         _moveDir = new Vector3(horizontal, 0f, vertical).normalized;
 
         var isRun = _moveDir.magnitude >= 0.1f;
-        _anim.SetBool("Run", isRun);
+        _anim.SetBool("isRun", isRun);
         
         if (!isRun) return;
         
