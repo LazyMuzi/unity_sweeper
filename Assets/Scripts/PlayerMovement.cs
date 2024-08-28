@@ -4,22 +4,16 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public VariableJoystick joystick;
-    
     public float moveSpeed = 10f;
-    public float turnSpeed = 20f;
     
-    private Animator _anim;
-    private Rigidbody _rb;
-    private AudioSource _audioSource;
-    private Vector3 _movement;
-    private Quaternion _rotation = Quaternion.identity;
+    public VariableJoystick joystick;
+    private CharacterController _controller;
+    
+    private Vector3 _moveDir;
     
     private void Start ()
     {
-        TryGetComponent (out _anim);
-        TryGetComponent(out _rb);
-        TryGetComponent(out _audioSource);
+        TryGetComponent(out _controller);
     }
 
     private void FixedUpdate ()
@@ -27,18 +21,12 @@ public class PlayerMovement : MonoBehaviour
         var horizontal = joystick.Horizontal;
         var vertical = joystick.Vertical;
         
-        _movement.Set(horizontal, 0f, vertical);
-        // _movement.Normalize ();
+        _moveDir = new Vector3(horizontal, 0f, vertical).normalized;
 
-        var hasHorizontalInput = !Mathf.Approximately (horizontal, 0f);
-        var hasVerticalInput = !Mathf.Approximately (vertical, 0f);
-        var isWalking = hasHorizontalInput || hasVerticalInput;
-        _anim.SetBool ("IsWalking", isWalking);
-
-        var desiredForward = Vector3.RotateTowards (transform.forward, _movement, turnSpeed * Time.deltaTime, 0f);
-        _rotation = Quaternion.LookRotation (desiredForward);
-
-        transform.forward = _movement;
-        transform.position += _movement * moveSpeed * Time.deltaTime;
+        if (!(_moveDir.magnitude >= 0.1f)) return;
+        
+        _moveDir = _moveDir.normalized;
+        transform.rotation = Quaternion.LookRotation(_moveDir);
+        _controller.Move(_moveDir * moveSpeed * Time.deltaTime);
     }
 }
